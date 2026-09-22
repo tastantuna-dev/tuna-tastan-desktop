@@ -1,0 +1,18 @@
+{
+  "name": "Tuna Taştan",
+  "short_name": "Tuna Taştan",
+  "description": "A focused, beautifully simple way to plan your day and get things done.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f5f1",
+  "theme_color": "#262523",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

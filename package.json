@@ -1,0 +1,39 @@
+{
+  "name": "tuna-tastan-desktop",
+  "version": "3.0.0",
+  "description": "Tuna Tastan desktop task planner - standalone local frontend, Supabase-backed, no ChatGPT/OpenAI runtime dependency",
+  "main": "src/main.cjs",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.tastantuna.tunatastan",
+    "productName": "Tuna Tastan",
+    "files": [
+      "src/**/*"
+    ],
+    "extraResources": [
+      { "from": "config/local.json", "to": "config/local.json" }
+    ],
+    "artifactName": "Tuna-Tastan-${version}-win.${ext}",
+    "win": {
+      "target": ["nsis", "zip"],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Tuna-Tastan-Setup-${version}.${ext}"
+    }
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.116.0"
+  }
+}

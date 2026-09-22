@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none';">
+<title>Tuna Taştan — Your calm daily planner</title>
+<meta name="description" content="A focused, beautifully simple way to plan your day and get things done.">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#262523">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tuna Taştan">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased">
+<div id="auth-screen" class="auth-screen" hidden>
+  <div class="auth-card">
+    <span class="brand-mark">TT</span>
+    <h1>Tuna Taştan</h1>
+    <p id="auth-intro">Sign in with your email to sync your tasks across devices.</p>
+    <form id="auth-form">
+      <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email" required>
+      <button type="submit">Send code</button>
+    </form>
+    <form id="auth-code-form" hidden>
+      <input type="text" id="auth-code" placeholder="6-digit code, or paste the sign-in link from your email" autocomplete="one-time-code" required>
+      <button type="submit">Verify</button>
+    </form>
+    <p id="auth-status" class="auth-status"></p>
+  </div>
+</div>
+<main class="app-shell" id="app-shell" hidden>
+  <div class="scrim" id="scrim"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">TT</span>
+      <span>Tuna Taştan</span>
+      <button class="close-menu" id="close-menu" aria-label="Close menu">&times;</button>
+    </div>
+    <nav aria-label="Task views" id="view-nav"></nav>
+    <div class="nav-label">Lists</div>
+    <nav aria-label="Lists" id="list-nav"></nav>
+    <button class="install-app" id="install-app"><span>&darr;</span><div><strong>Install on this device</strong><small>See simple instructions</small></div></button>
+    <div class="sidebar-note"><span>&#10022;</span><p><strong>Small steps, big days.</strong><br><span id="completed-note">You&rsquo;ve completed 0 tasks so far.</span></p></div>
+  </aside>
+  <section class="workspace">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobile-menu" aria-label="Open menu">&#9776;</button>
+      <div>
+        <p class="eyebrow" id="today-label"></p>
+        <h1 id="view-title">Your day, at a glance.</h1>
+      </div>
+      <div class="top-actions">
+        <button class="top-install" id="top-install">&darr; Install</button>
+        <button class="search" aria-label="Show all tasks" id="search-btn">&#8981;</button>
+        <button class="avatar" id="avatar-btn">TT</button>
+      </div>
+    </header>
+    <div class="content-grid">
+      <section class="task-panel">
+        <div class="progress-card">
+          <div><span class="eyebrow">Overall progress</span><strong id="progress-text">0 of 0 tasks</strong></div>
+          <div class="progress-track"><span id="progress-bar" style="width:0%"></span></div>
+          <b id="progress-pct">0%</b>
+        </div>
+        <form class="quick-add" id="quick-add">
+          <button type="submit" aria-label="Add task">&#65291;</button>
+          <input aria-label="New task" id="quick-add-input" placeholder="What needs to be done?" autocomplete="off">
+          <select aria-label="Task list" id="quick-add-list"></select>
+          <span>Press Enter</span>
+        </form>
+        <div class="section-heading"><h2 id="section-title">Today</h2><span id="section-count">0 tasks</span></div>
+        <div class="task-list" id="task-list"></div>
+      </section>
+      <aside class="focus-panel">
+        <div class="calendar-card">
+          <div class="calendar-head">
+            <div><p class="eyebrow">Task calendar</p><h2 id="calendar-month"></h2></div>
+            <div><button id="cal-prev" aria-label="Previous month">&lsaquo;</button><button id="cal-next" aria-label="Next month">&rsaquo;</button></div>
+          </div>
+          <div class="calendar-week"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          <div class="calendar-grid" id="calendar-grid"></div>
+        </div>
+        <div class="clock-card">
+          <div class="section-heading"><h2>World time</h2><span>Live</span></div>
+          <div class="clock-row"><span>&#127465;&#127466;</span><div><strong>Berlin</strong><small>Europe</small></div><time id="clock-berlin"></time></div>
+          <div class="clock-row"><span>&#127481;&#127479;</span><div><strong>Ankara</strong><small>T&uuml;rkiye</small></div><time id="clock-ankara"></time></div>
+        </div>
+        <div class="focus-card compact">
+          <span class="focus-icon">&#9678;</span>
+          <p class="eyebrow">Daily focus</p>
+          <h2>Make room for what matters.</h2>
+          <button id="focus-start">Start a 25 min focus</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+<script src="config.js"></script>
+<script src="vendor/supabase.umd.js"></script>
+<script src="lib/electronAuthStorage.js"></script>
+<script src="lib/browserAuthStorage.js"></script>
+<script src="lib/supabaseClient.js"></script>
+<script src="lib/authService.js"></script>
+<script src="lib/dataAdapter.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

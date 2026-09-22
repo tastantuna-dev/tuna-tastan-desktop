@@ -1,0 +1,224 @@
+/* Reconstructed 1:1 from the real running app's compiled stylesheet
+   (captured live via CDP against the user's own authenticated session,
+   2026-09-22 - see STANDALONE_MIGRATION_S1 report). Class names, colors,
+   spacing, radii, shadows and breakpoints are kept verbatim on purpose -
+   this file is the canonical visual reference; do not "clean up" or
+   modernize it. The Tailwind preflight boilerplate the real build emits is
+   replaced with an equivalent minimal reset - no component class below
+   depends on Tailwind utilities, only on these hand-written rules. */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
+html { -webkit-text-size-adjust: 100%; line-height: 1.5; }
+button, input, select { font: inherit; color: inherit; background-color: transparent; }
+a { color: inherit; text-decoration: inherit; }
+ol, ul { list-style: none; }
+
+:root {
+  --ink: #252321;
+  --muted: #827d77;
+  --line: #e9e5df;
+  --paper: #f7f5f1;
+  --cream: #fffdfa;
+  --accent: #ff7058;
+  --font-geist-sans: 'Geist', Arial, sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-geist-sans), Arial, sans-serif; margin: 0; }
+button, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+
+.app-shell { grid-template-columns: 250px 1fr; min-height: 100vh; display: grid; }
+.sidebar { color: #f7f3ed; background: #262523; flex-direction: column; width: 250px; min-height: 100vh; padding: 30px 20px 22px; display: flex; position: fixed; inset: 0 auto 0 0; }
+.brand { letter-spacing: -.3px; align-items: center; gap: 11px; padding: 0 10px 30px; font-size: 19px; font-weight: 700; display: flex; }
+.brand-mark { background: var(--accent); color: #fff; border-radius: 10px 10px 10px 3px; place-items: center; width: 31px; height: 31px; letter-spacing: -.5px; font-size: 11px; font-style: normal; display: grid; }
+nav { gap: 4px; display: grid; }
+.nav-item { color: #c8c4bf; border-radius: 10px; align-items: center; gap: 12px; padding: 11px 12px; font-size: 14px; text-decoration: none; display: flex; text-align: left; cursor: pointer; background: 0 0; border: 0; width: 100%; }
+.nav-item span { text-align: center; width: 18px; font-size: 18px; }
+.nav-item b { color: #8f8b86; margin-left: auto; font-size: 12px; font-weight: 500; }
+.nav-item.active { color: #fff; background: #393735; }
+.nav-label { color: #77736f; text-transform: uppercase; letter-spacing: 1.5px; margin: 32px 12px 9px; font-size: 10px; font-weight: 700; }
+.dot { border-radius: 50%; width: 7px; height: 7px; display: inline-block; }
+.coral { background: #ff7058; }
+.violet { background: #9a78d0; }
+.blue { background: #4f8fcf; }
+.gold { background: #e0a840; }
+.add-list { color: #8f8b86; text-align: left; cursor: pointer; background: 0 0; border: 0; padding: 12px; }
+.sidebar-note { color: #a9a49e; border: 1px solid #45423f; border-radius: 13px; gap: 10px; margin-top: 0; padding: 15px; font-size: 11px; line-height: 1.5; display: flex; }
+.sidebar-note p { margin: 0; }
+.sidebar-note strong { color: #ddd8d2; font-size: 12px; }
+.sidebar-note span { color: #f4b95f; }
+.install-app { color: #fff; text-align: left; cursor: pointer; background: #353330; border: 1px solid #4a4744; border-radius: 11px; align-items: center; gap: 10px; width: 100%; margin-top: auto; margin-bottom: 12px; padding: 11px 12px; display: flex; }
+.install-app:disabled { cursor: default; opacity: .68; }
+.install-app > span { background: var(--accent); border-radius: 8px; place-items: center; width: 28px; height: 28px; font-size: 16px; display: grid; }
+.install-app div { gap: 2px; display: grid; }
+.install-app strong { font-size: 12px; }
+.install-app small { color: #99948e; font-size: 9px; }
+
+.workspace { grid-column: 2; width: 100%; max-width: 1500px; margin: auto; padding: 0 4.5vw 60px; }
+.topbar { border-bottom: 1px solid var(--line); justify-content: space-between; align-items: center; min-height: 136px; display: flex; }
+.eyebrow { text-transform: uppercase; letter-spacing: 1.5px; color: #a19b94; margin: 0 0 6px; font-size: 10px; font-weight: 700; }
+.topbar h1 { letter-spacing: -.7px; margin: 0; font-family: Georgia, serif; font-size: 31px; font-weight: 500; }
+.top-actions { gap: 10px; display: flex; }
+.search, .avatar, .mobile-menu { border: 1px solid var(--line); background: var(--cream); cursor: pointer; border-radius: 50%; width: 40px; height: 40px; }
+.avatar { background: #dfd4c6; border: 0; font-size: 12px; font-weight: 700; }
+.mobile-menu { display: none; }
+.top-install { color: #fff; cursor: pointer; background: #2c302e; border: 0; border-radius: 9px; padding: 10px 13px; font-size: 11px; font-weight: 700; }
+
+.content-grid { grid-template-columns: minmax(450px,1fr) 310px; gap: 42px; padding-top: 36px; display: grid; }
+.progress-card { background: #ece5dc; border-radius: 14px; grid-template-columns: auto 1fr auto; align-items: center; gap: 25px; min-height: 82px; padding: 20px 23px; display: grid; }
+.progress-card strong { font-family: Georgia, serif; font-size: 19px; font-weight: 500; display: block; }
+.progress-track { background: #d8cec2; border-radius: 5px; height: 5px; overflow: hidden; }
+.progress-track span { background: var(--accent); height: 100%; display: block; }
+.progress-card > b { font-size: 12px; }
+
+.quick-add { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; align-items: center; gap: 12px; margin: 26px 0 34px; padding: 9px 12px; display: flex; box-shadow: 0 6px 24px #342d260a; }
+.quick-add button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; width: 32px; height: 32px; font-size: 20px; }
+.quick-add input { background: 0 0; border: 0; outline: 0; flex: 1; font-size: 13px; min-width: 60px; }
+.quick-add select { color: #807a73; background: 0 0; border: 0; outline: 0; font-size: 11px; }
+.quick-add span { text-transform: uppercase; letter-spacing: 1px; color: #aaa39b; border: 1px solid var(--line); border-radius: 5px; padding: 5px 7px; font-size: 9px; }
+
+.section-heading { justify-content: space-between; align-items: center; margin-bottom: 12px; display: flex; }
+.section-heading h2 { text-transform: uppercase; letter-spacing: 1.3px; font-size: 12px; }
+.section-heading button { color: #aaa; background: 0 0; border: 0; }
+.section-heading > span { color: #a69f98; font-size: 11px; }
+.task-list { border-top: 1px solid var(--line); }
+.task-row { border-bottom: 1px solid var(--line); align-items: center; gap: 14px; min-height: 76px; padding: 10px 4px; display: flex; }
+.check { cursor: pointer; background: 0 0; border: 1.5px solid #c8c1b9; border-radius: 50%; flex: none; width: 21px; height: 21px; }
+.task-row div { flex: 1; }
+.task-row h3 { margin: 0 0 6px; font-size: 14px; font-weight: 560; }
+.task-row p { color: #9a938c; margin: 0; font-size: 11px; }
+.task-row p .dot { margin-right: 5px; }
+.priority { text-transform: uppercase; letter-spacing: .8px; color: #d85a47; background: #fbe2dd; border-radius: 10px; padding: 5px 8px; font-size: 9px; }
+.row-menu { color: #bbb3ab; background: 0 0; border: 0; }
+.later { margin-top: 30px; }
+.task-row.muted { opacity: .7; }
+.task-row.done .check { color: #fff; background: #5d8c75; border-color: #5d8c75; }
+.task-row.done h3 { color: #9c958e; text-decoration: line-through; }
+.edit-btn, .delete-btn { opacity: 0; color: #aaa29a; cursor: pointer; background: 0 0; border: 0; padding: 7px; font-size: 15px; }
+.task-row:hover .edit-btn, .task-row:hover .delete-btn, .edit-btn:focus, .delete-btn:focus { opacity: 1; }
+.delete-btn:hover { color: #da4e3a; }
+.empty-state { color: #aaa29a; text-align: center; flex-direction: column; justify-content: center; align-items: center; gap: 7px; min-height: 180px; font-size: 12px; display: flex; }
+.empty-state b { color: #59544f; font-family: Georgia, serif; font-size: 20px; font-weight: 500; }
+
+.focus-panel { align-content: start; gap: 18px; display: grid; }
+.focus-card { color: #fff; background: #29312f; border-radius: 17px; min-height: 305px; padding: 27px; }
+.focus-card.compact { min-height: 225px; }
+.focus-card.compact .eyebrow { margin-top: 22px; }
+.focus-icon { color: #f2b960; font-size: 32px; }
+.focus-card .eyebrow { color: #9ba6a2; margin-top: 45px; }
+.focus-card h2 { margin: 8px 0 12px; font-family: Georgia, serif; font-size: 25px; font-weight: 500; line-height: 1.12; }
+.focus-card > p:not(.eyebrow) { color: #b5bdb9; font-size: 12px; line-height: 1.6; }
+.focus-card button { color: #313533; background: #f6f0e8; border: 0; border-radius: 8px; margin-top: 12px; padding: 11px 15px; font-size: 11px; font-weight: 700; }
+
+.calendar-card, .clock-card { background: var(--cream); border: 1px solid var(--line); border-radius: 16px; padding: 19px; }
+.calendar-head { justify-content: space-between; align-items: center; margin-bottom: 15px; display: flex; }
+.calendar-head h2 { margin: 0; font-family: Georgia, serif; font-size: 20px; font-weight: 500; }
+.calendar-head > div:last-child { gap: 5px; display: flex; }
+.calendar-head button { border: 1px solid var(--line); color: #6f6962; cursor: pointer; background: #fff; border-radius: 8px; width: 29px; height: 29px; font-size: 20px; }
+.calendar-week, .calendar-grid { grid-template-columns: repeat(7,1fr); gap: 3px; display: grid; }
+.calendar-week { margin-bottom: 5px; }
+.calendar-week span { text-align: center; color: #aaa39c; font-size: 8px; font-weight: 700; }
+.calendar-grid button { aspect-ratio: 1; color: #4f4a45; cursor: pointer; background: 0 0; border: 0; border-radius: 8px; place-items: center; min-width: 0; font-size: 10px; display: grid; position: relative; }
+.calendar-grid button:hover { background: #f2eee8; }
+.calendar-grid button.outside { color: #c9c3bc; }
+.calendar-grid button.today { box-shadow: inset 0 0 0 1px var(--accent); color: #d85a47; font-weight: 700; }
+.calendar-grid button.selected { background: var(--accent); color: #fff; box-shadow: none; }
+.clear-date { color: #bf6556; cursor: pointer; background: 0 0; border: 0; margin: 12px auto 0; font-size: 9px; text-decoration: underline; display: block; }
+
+.clock-card .section-heading { margin-bottom: 4px; }
+.clock-row { border-top: 1px solid var(--line); align-items: center; gap: 10px; padding: 13px 0; display: flex; }
+.clock-row > span { font-size: 18px; }
+.clock-row div { flex: 1; gap: 2px; display: grid; }
+.clock-row strong { font-size: 12px; }
+.clock-row small { color: #aaa29b; font-size: 9px; }
+.clock-row time { font-family: var(--font-geist-mono), monospace; letter-spacing: .3px; font-size: 13px; font-weight: 650; }
+
+.close-menu, .scrim { display: none; }
+.modal-wrap { z-index: 30; background: #1816147a; place-items: center; padding: 18px; display: grid; position: fixed; inset: 0; }
+.edit-modal { background: #fffdfa; border-radius: 18px; width: min(480px,100%); padding: 24px; box-shadow: 0 24px 70px #0003; }
+.edit-modal label { color: #746e67; gap: 7px; margin: 15px 0; font-size: 11px; font-weight: 600; display: grid; }
+.edit-modal input:not([type=checkbox]), .edit-modal select { border: 1px solid var(--line); width: 100%; color: var(--ink); background: #fff; border-radius: 9px; outline: 0; padding: 11px; }
+.edit-modal input:focus, .edit-modal select:focus { border-color: #d1887b; }
+.form-grid { grid-template-columns: 1fr 1fr; gap: 14px; display: grid; }
+.priority-check { align-items: center; display: flex; }
+.modal-actions { justify-content: flex-end; gap: 8px; margin-top: 22px; display: flex; }
+.modal-actions button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 9px 14px; font-size: 12px; }
+.modal-actions .save { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.install-modal { background: #fffdfa; border-radius: 20px; width: min(470px,100%); padding: 30px; position: relative; box-shadow: 0 24px 70px #0003; }
+.modal-close { color: #918a83; cursor: pointer; background: 0 0; border: 0; font-size: 24px; position: absolute; top: 14px; right: 17px; }
+.install-logo { background: var(--accent); color: #fff; border-radius: 14px 14px 14px 5px; place-items: center; width: 48px; height: 48px; margin-bottom: 23px; font-family: Georgia, serif; font-size: 16px; font-weight: 700; display: grid; }
+.install-modal h2 { margin: 7px 0 20px; font-family: Georgia, serif; font-size: 25px; font-weight: 500; line-height: 1.15; }
+.install-modal ol { color: #5e5852; gap: 11px; margin: 0; padding-left: 22px; font-size: 13px; line-height: 1.45; display: grid; list-style: decimal; }
+.install-note { color: #918a83; margin: 20px 0; font-size: 11px; line-height: 1.5; }
+.got-it { color: #fff; cursor: pointer; background: #2c302e; border: 0; border-radius: 10px; width: 100%; padding: 12px; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar { z-index: 20; transition: transform .25s; display: flex; transform: translate(-105%); box-shadow: 20px 0 50px #0000002e; }
+  .sidebar.open { transform: translate(0); }
+  .scrim.open { z-index: 15; background: #19171575; border: 0; display: block; position: fixed; inset: 0; }
+  .close-menu { color: #fff; background: 0 0; border: 0; margin-left: auto; font-size: 25px; display: block; }
+  .workspace { grid-column: 1; padding: 0 24px 50px; }
+  .mobile-menu { display: block; }
+  .content-grid { grid-template-columns: 1fr; }
+  .focus-panel { grid-template-columns: 1fr 1fr; }
+  .calendar-card { grid-row: span 2; }
+  .focus-card.compact { min-height: 240px; }
+  .topbar { min-height: 110px; }
+  .topbar h1 { font-size: 25px; }
+}
+@media (max-width: 650px) {
+  .focus-panel { grid-template-columns: 1fr; }
+  .calendar-card { grid-row: auto; }
+  .clock-row time { font-size: 12px; }
+  .install-modal { padding: 25px 22px; }
+  .install-modal h2 { font-size: 22px; }
+  .top-install { font-size: 10px; }
+}
+@media (max-width: 600px) {
+  .workspace { padding: 0 16px 36px; }
+  .topbar { gap: 12px; }
+  .topbar > div:first-of-type { flex: 1; }
+  .topbar h1 { font-size: 22px; }
+  .search { display: none; }
+  .content-grid { padding-top: 20px; }
+  .progress-card { grid-template-columns: 1fr auto; gap: 12px; }
+  .progress-track { grid-area: 2/1/auto/3; }
+  .quick-add span { display: none; }
+  .quick-add select { max-width: 80px; }
+  .focus-panel { grid-template-columns: 1fr; }
+  .task-row { min-height: 70px; gap: 12px; }
+  .focus-card { min-height: 270px; }
+  .edit-btn, .delete-btn { opacity: 1; }
+  .form-grid { grid-template-columns: 1fr; }
+  .top-install { padding: 9px 10px; }
+  .brand { font-size: 17px; }
+}
+
+/* Auth/enrollment screen (S2, new - no equivalent existed in the observed
+   remote app, whose "auth" was entirely ChatGPT's own gate page). Built
+   strictly from the existing design tokens/patterns (same card radius and
+   shadow as .install-modal, same Georgia heading, same dark full-width
+   button as .got-it, same input style as .edit-modal) - not a new
+   component library, not a layout change to the app shell itself. */
+.auth-screen { min-height: 100vh; background: var(--paper); place-items: center; display: grid; padding: 24px; }
+.auth-screen[hidden], .app-shell[hidden] { display: none; }
+.auth-card { background: #fffdfa; border-radius: 20px; width: min(400px,100%); padding: 32px; text-align: center; box-shadow: 0 24px 70px #0003; }
+.auth-card .brand-mark { margin: 0 auto 18px; }
+.auth-card h1 { font-family: Georgia, serif; font-size: 25px; font-weight: 500; margin: 0 0 10px; }
+.auth-card p { color: #746e67; font-size: 13px; line-height: 1.5; margin: 0 0 20px; }
+.auth-card input { border: 1px solid var(--line); width: 100%; color: var(--ink); background: #fff; border-radius: 9px; outline: 0; padding: 11px; font-size: 13px; margin-bottom: 12px; }
+.auth-card input:focus { border-color: #d1887b; }
+.auth-card button { color: #fff; cursor: pointer; background: #2c302e; border: 0; border-radius: 10px; width: 100%; padding: 12px; font-weight: 700; font-size: 13px; }
+.auth-card button:disabled { opacity: .6; cursor: default; }
+.auth-status { min-height: 16px; font-size: 11px; color: #918a83; margin: 14px 0 0 !important; }
+.auth-status.error { color: #da4e3a; }
+.auth-status.ok { color: #5d8c75; }
+.sign-out-menu { z-index: 30; background: #1816147a; place-items: center; padding: 18px; display: grid; position: fixed; inset: 0; }
+.sign-out-card { background: #fffdfa; border-radius: 18px; width: min(320px,100%); padding: 22px; text-align: center; box-shadow: 0 24px 70px #0003; }
+.sign-out-card p { color: #746e67; font-size: 12px; margin: 8px 0 16px; }
+.sign-out-actions { gap: 8px; display: flex; }
+.sign-out-actions button { flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 9px 14px; font-size: 12px; cursor: pointer; }
+.sign-out-actions .confirm { background: var(--accent); color: #fff; border-color: var(--accent); }
