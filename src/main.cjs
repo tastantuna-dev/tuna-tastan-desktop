@@ -1,12 +1,14 @@
-// Tuna Tastan desktop shell - Standalone Migration S4
+// Tuna Tastan desktop shell - Standalone Migration S4/S6
 // Scope: retires the ChatGPT-hosted remote runtime and its auth-window
 // isolation entirely. The standalone local frontend (app://tuna) is now the
 // sole, unconditional production origin; Supabase is the sole auth/data
 // backend. See STANDALONE_MIGRATION_S4 report for the pre-retirement audit
-// and KEEP/REMOVE/REPLACE decisions this file reflects.
+// and KEEP/REMOVE/REPLACE decisions this file reflects. S6 added minimal
+// native auto-update (electron-updater + GitHub Releases) - see
+// lib/updater.cjs.
 //
-// Deferred to a later phase: auto-update, NSIS/signing, downloads manager,
-// file/clipboard bridge, taskbar progress/badge, global shortcuts.
+// Deferred to a later phase: NSIS/signing, downloads manager, file/clipboard
+// bridge, taskbar progress/badge, global shortcuts.
 const { app, BrowserWindow, Menu, shell, screen, Notification, ipcMain, protocol } = require('electron');
 const path = require('path');
 const { Logger } = require('./lib/logger.cjs');
@@ -17,6 +19,7 @@ const startup = require('./lib/startup.cjs');
 const standaloneProtocol = require('./lib/standaloneProtocol.cjs');
 const { loadSupabaseConfig } = require('./lib/config.cjs');
 const { createAuthStorage } = require('./lib/authStorage.cjs');
+const { createUpdater } = require('./lib/updater.cjs');
 
 // Must match electron-builder's build.appId exactly (package.json).
 const APP_USER_MODEL_ID = 'com.tastantuna.tunatastan';
@@ -50,6 +53,7 @@ const MAX_RENDERER_LOG_MESSAGE_LENGTH = 2000;
 let logger;
 let mainWindow = null;
 let tray = null;
+let updater = null;
 const lifecycle = createLifecycle();
 
 // Single source of truth for "what is this URL, and how should we handle
@@ -99,7 +103,10 @@ function safeUrlForLog(urlString) {
 // the user.
 const NOTIFY_COOLDOWN_MS = 10000;
 const notifyLastSentAt = new Map();
-function notify(title, body, topic) {
+// `onClick` lets a specific call site (e.g. the S6 updater's "ready to
+// install" notification) override the default click behavior; every other
+// caller keeps the original default of just focusing the main window.
+function notify(title, body, topic, onClick) {
   try {
     if (!Notification.isSupported()) return;
     if (topic) {
@@ -109,6 +116,7 @@ function notify(title, body, topic) {
     }
     const n = new Notification({ title, body, silent: true });
     n.on('click', () => {
+      if (onClick) { onClick(); return; }
       if (!mainWindow || mainWindow.isDestroyed()) return;
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.show();
@@ -395,6 +403,7 @@ if (!gotLock) {
       + `supabaseConfigured=${SUPABASE_CONFIG.configured}`
     );
     authStorage = createAuthStorage(app.getPath('userData'));
+    updater = createUpdater({ app, logger, notify });
     standaloneProtocol.setupProtocolHandler(protocol, FRONTEND_ROOT);
     setupIpc();
     Menu.setApplicationMenu(null);
@@ -417,11 +426,17 @@ if (!gotLock) {
       // 'close' event, so lifecycle.isQuitting() is already true by the
       // time the close handler above runs.
       quitApp: () => app.quit(),
+      checkForUpdates: () => updater.checkForUpdates(),
       startup,
     });
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow();
     });
+
+    // S6: delayed (never on the critical startup path) and entirely
+    // best-effort - see lib/updater.cjs for why every failure mode here is
+    // just a log line, never a blocked/crashed app.
+    setTimeout(() => updater.checkForUpdates(), 10000);
   });
 
   // The single, exclusive place lifecycle's quit-intent flag is written.

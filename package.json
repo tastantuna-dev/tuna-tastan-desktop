@@ -15,11 +15,23 @@
       "src/**/*"
     ],
     "extraResources": [
-      { "from": "config/local.json", "to": "config/local.json" }
+      {
+        "from": "config/local.json",
+        "to": "config/local.json"
+      }
     ],
     "artifactName": "Tuna-Tastan-${version}-win.${ext}",
+    "publish": {
+      "provider": "github",
+      "owner": "tastantuna-dev",
+      "repo": "tuna-tastan-desktop",
+      "releaseType": "draft"
+    },
     "win": {
-      "target": ["nsis", "zip"],
+      "target": [
+        "nsis",
+        "zip"
+      ],
       "icon": "build/icon.ico"
     },
     "nsis": {
@@ -34,6 +46,7 @@
     "electron-builder": "^25.0.0"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.116.0"
+    "@supabase/supabase-js": "^2.116.0",
+    "electron-updater": "^6.8.9"
   }
 }
