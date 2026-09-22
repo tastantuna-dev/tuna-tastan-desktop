@@ -17,7 +17,7 @@ function buildTrayIcon(iconPath) {
   return full.resize({ width: 32, height: 32, quality: 'best' });
 }
 
-function createTray({ iconPath, logger, showMainWindow, hideMainWindow, quitApp, checkForUpdates, startup }) {
+function createTray({ iconPath, logger, showMainWindow, hideMainWindow, quitApp, checkForUpdates, createDiagnosticsBundle, startup }) {
   const tray = new Tray(buildTrayIcon(iconPath));
   trayRef = tray;
   tray.setToolTip('Tuna Tastan');
@@ -47,6 +47,7 @@ function createTray({ iconPath, logger, showMainWindow, hideMainWindow, quitApp,
       },
       { type: 'separator' },
       { label: 'Güncellemeleri kontrol et', click: () => checkForUpdates() },
+      { label: 'Tanılama paketi oluştur', click: () => createDiagnosticsBundle() },
       { type: 'separator' },
       { label: 'Çıkış', click: () => quitApp() },
     ]);

@@ -36,6 +36,10 @@ function getAutoUpdater() {
 
 function createUpdater({ app, logger, notify }) {
   let wired = false;
+  // Release Hardening: minimal state for the diagnostics bundle - booleans/
+  // timestamps/short enums only, never anything from the update payload
+  // itself beyond the version string GitHub already publishes.
+  const state = { lastCheckAt: null, lastResult: 'never-checked' };
 
   function wireEvents() {
     if (wired) return;
@@ -45,16 +49,17 @@ function createUpdater({ app, logger, notify }) {
     autoUpdater.autoDownload = true;
     autoUpdater.autoInstallOnAppQuit = false; // explicit user action only, never silent-on-quit
 
-    autoUpdater.on('checking-for-update', () => logger.info('[updater] checking for update'));
-    autoUpdater.on('update-not-available', (info) => logger.info(`[updater] no update available (current ${info.version})`));
-    autoUpdater.on('update-available', (info) => logger.info(`[updater] update available: ${info.version}`));
+    autoUpdater.on('checking-for-update', () => { logger.info('[updater] checking for update'); state.lastCheckAt = new Date().toISOString(); state.lastResult = 'checking'; });
+    autoUpdater.on('update-not-available', (info) => { logger.info(`[updater] no update available (current ${info.version})`); state.lastResult = 'up-to-date'; });
+    autoUpdater.on('update-available', (info) => { logger.info(`[updater] update available: ${info.version}`); state.lastResult = 'update-available'; });
     autoUpdater.on('download-progress', (p) => logger.info(`[updater] downloading: ${Math.round(p.percent)}%`));
     // Never let an update-check failure be anything but a log line - a
     // GitHub outage, no releases published yet, or the user being offline
     // must never surface as an error the user sees or a blocked app.
-    autoUpdater.on('error', (err) => logger.warn(`[updater] check/download failed (non-fatal): ${err && err.message ? err.message : err}`));
+    autoUpdater.on('error', (err) => { logger.warn(`[updater] check/download failed (non-fatal): ${err && err.message ? err.message : err}`); state.lastResult = 'error'; });
     autoUpdater.on('update-downloaded', (info) => {
       logger.info(`[updater] update ${info.version} downloaded, ready to install`);
+      state.lastResult = 'downloaded';
       notify(
         'Tuna Tastan guncellemesi hazir',
         `Surum ${info.version} indirildi. Uygulamayi yeniden baslatmak icin tikla.`,
@@ -90,7 +95,11 @@ function createUpdater({ app, logger, notify }) {
     }
   }
 
-  return { checkForUpdates, quitAndInstall };
+  function getState() {
+    return { ...state, packaged: app.isPackaged };
+  }
+
+  return { checkForUpdates, quitAndInstall, getState };
 }
 
 module.exports = { createUpdater };

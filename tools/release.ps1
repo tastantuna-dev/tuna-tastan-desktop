@@ -93,6 +93,23 @@ $zip.Dispose()
 if ($badEntries) { Fail "suspicious entries in release zip: $($badEntries.FullName -join ', ')" }
 Write-Output "  [ok] release zip contains no obviously sensitive files"
 
+# --- Gate: signing (Release Hardening phase) ------------------------------
+# CSC_LINK present = the user intends this build to be signed (electron-
+# builder auto-signs from that env var with no extra config - see
+# package.json's win.signingHashAlgorithms/rfc3161TimeStampServer). If they
+# went to the trouble of setting it, a still-unsigned artifact means
+# signing silently failed - that must block the release, never publish an
+# artifact that was SUPPOSED to be signed but isn't. Absent CSC_LINK, this
+# project's current, accepted policy is unsigned releases (see README) -
+# WARN clearly, do not block.
+if ($env:CSC_LINK) {
+  & "$PSScriptRoot\verify-signing.ps1" -Require
+  if ($LASTEXITCODE -ne 0) { Fail "CSC_LINK is set (signing was expected) but verify-signing.ps1 found an unsigned/invalid binary - never publishing an artifact that was supposed to be signed but isn't" }
+  Write-Output "  [ok] signing verified (CSC_LINK present, all binaries Valid)"
+} else {
+  Write-Output "  [WARN] no CSC_LINK set - this release will be UNSIGNED (current accepted policy, see README). SmartScreen may warn users on first run."
+}
+
 Write-Output "=== Gates passed, artifacts ready in dist\ ==="
 Get-ChildItem dist -File | Select-Object Name, Length | Format-Table -AutoSize
 

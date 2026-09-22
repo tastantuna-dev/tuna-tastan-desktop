@@ -20,6 +20,7 @@ const standaloneProtocol = require('./lib/standaloneProtocol.cjs');
 const { loadSupabaseConfig } = require('./lib/config.cjs');
 const { createAuthStorage } = require('./lib/authStorage.cjs');
 const { createUpdater } = require('./lib/updater.cjs');
+const { createDiagnosticsBundle } = require('./lib/diagnostics.cjs');
 
 // Must match electron-builder's build.appId exactly (package.json).
 const APP_USER_MODEL_ID = 'com.tastantuna.tunatastan';
@@ -326,13 +327,22 @@ function assertAppSender(event) {
 }
 
 // Strips control characters (including CR/LF, which could otherwise forge
-// extra fake log lines) and caps length, so a hostile or buggy renderer
-// message can't corrupt or flood the diagnostics log.
+// extra fake log lines), caps length, and redacts anything token/secret-
+// shaped (Release Hardening phase - defense in depth: renderer log/error
+// text is always supposed to be plain human-facing strings, never a
+// token, but a future bug could accidentally interpolate one into a
+// thrown Error message, and this is the one narrow point every renderer
+// log line already passes through).
+const REDACT_PATTERNS = [
+  /Bearer\s+[A-Za-z0-9\-_.]+/gi, // Authorization header values
+  /eyJ[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+/g, // JWT-shaped (access/refresh tokens)
+  /sb-[a-z0-9-]+-auth-token[^\s]*/gi, // Supabase auth storage key + any adjacent value
+];
 function sanitizeLogMessage(raw) {
-  return String(raw)
-    .slice(0, MAX_RENDERER_LOG_MESSAGE_LENGTH)
-    // eslint-disable-next-line no-control-regex
-    .replace(/[\x00-\x1f\x7f]/g, ' ');
+  let msg = String(raw).slice(0, MAX_RENDERER_LOG_MESSAGE_LENGTH);
+  for (const pattern of REDACT_PATTERNS) msg = msg.replace(pattern, '[redacted]');
+  // eslint-disable-next-line no-control-regex
+  return msg.replace(/[\x00-\x1f\x7f]/g, ' ');
 }
 
 function setupIpc() {
@@ -427,6 +437,11 @@ if (!gotLock) {
       // time the close handler above runs.
       quitApp: () => app.quit(),
       checkForUpdates: () => updater.checkForUpdates(),
+      createDiagnosticsBundle: () => createDiagnosticsBundle({
+        app, logger, shell,
+        supabaseConfigured: SUPABASE_CONFIG.configured,
+        updaterState: updater.getState(),
+      }),
       startup,
     });
     app.on('activate', () => {
@@ -455,5 +470,19 @@ if (!gotLock) {
 
   process.on('uncaughtException', (err) => {
     if (logger) logger.error(`uncaughtException: ${err.stack || err.message}`);
+  });
+
+  // Release Hardening: main-process promise rejections had no handler at
+  // all before this - they were silently swallowed, the single biggest
+  // gap in crash visibility (found via audit, not a reported symptom).
+  process.on('unhandledRejection', (reason) => {
+    const detail = reason instanceof Error ? (reason.stack || reason.message) : String(reason);
+    if (logger) logger.error(`unhandledRejection: ${detail}`);
+  });
+
+  // GPU/utility/network process crashes (distinct from a renderer crash,
+  // already handled per-window above) - Electron 28+.
+  app.on('child-process-gone', (event, details) => {
+    if (logger) logger.error(`child-process-gone: type=${details.type} reason=${details.reason} exitCode=${details.exitCode}`);
   });
 }

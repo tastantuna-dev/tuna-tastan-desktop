@@ -4,7 +4,7 @@
 // handled at the data layer by dataAdapter.js's own queue/cache (see
 // browserAuthStorage.js/electronAuthStorage.js for why auth storage is
 // separate and deliberately not routed through here).
-const SHELL_CACHE = 'tuna-shell-v1';
+const SHELL_CACHE = 'tuna-shell-v2';
 const SHELL_FILES = [
   './',
   './index.html',
@@ -13,6 +13,8 @@ const SHELL_FILES = [
   './data.js',
   './manifest.json',
   './icon.png',
+  './crashReporter.js',
+  './pwa.js',
   './vendor/supabase.umd.js',
   './lib/electronAuthStorage.js',
   './lib/browserAuthStorage.js',
