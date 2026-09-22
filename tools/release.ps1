@@ -102,7 +102,7 @@ if ($SkipPublish) {
 }
 
 Write-Output "=== Creating DRAFT GitHub Release $tag ==="
-$artifacts = Get-ChildItem dist -File | Where-Object { $_.Name -match '\.(exe|zip|blockmap|yml)$' } | Select-Object -ExpandProperty FullName
+$artifacts = Get-ChildItem dist -File | Where-Object { $_.Name -match '\.(exe|zip|blockmap)$' -or $_.Name -eq 'latest.yml' } | Select-Object -ExpandProperty FullName
 gh release create $tag $artifacts `
   --repo "tastantuna-dev/tuna-tastan-desktop" `
   --title "Tuna Tastan $version" `

@@ -1,6 +1,6 @@
 {
   "name": "tuna-tastan-desktop",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Tuna Tastan desktop task planner - standalone local frontend, Supabase-backed, no ChatGPT/OpenAI runtime dependency",
   "main": "src/main.cjs",
   "private": true,
