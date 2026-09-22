@@ -21,7 +21,12 @@ param(
   [switch]$SkipPublish
 )
 
-$ErrorActionPreference = 'Stop'
+# Deliberately NOT 'Stop': native exes (git/gh/npm) writing to stderr on a
+# perfectly normal path (e.g. gh's 404 for "does this release exist yet")
+# get wrapped into a terminating ErrorRecord under 'Stop' in Windows
+# PowerShell 5.1, which would abort this script on totally expected
+# output. Every native call below checks $LASTEXITCODE explicitly instead.
+$ErrorActionPreference = 'Continue'
 $repoRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $repoRoot
 
@@ -47,7 +52,7 @@ $version = $pkg.version
 $tag = "v$version"
 $existingTag = git tag -l $tag 2>&1
 if ($existingTag) { Fail "tag $tag already exists locally" }
-$existingRelease = gh release view $tag --repo "tastantuna-dev/tuna-tastan-desktop" 2>&1
+gh release view $tag --repo "tastantuna-dev/tuna-tastan-desktop" --json tagName 2>$null | Out-Null
 if ($LASTEXITCODE -eq 0) { Fail "GitHub release $tag already exists" }
 Write-Output "  [ok] version $version / tag $tag has no conflict"
 
